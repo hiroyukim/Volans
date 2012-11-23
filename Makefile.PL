@@ -2,12 +2,11 @@ use inc::Module::Install;
 name 'Volans';
 all_from 'lib/Volans.pm';
 
-# requires '';
+requires 'Try::Tiny';
 
 tests 't/*.t';
-#author_tests 'xt';
 
 test_requires 'Test::More';
-#auto_set_repository;
 auto_include;
+install_script('bin/volans');
 WriteAll;
