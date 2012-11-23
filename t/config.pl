@@ -1,6 +1,6 @@
 {
     hooks => {
-        echo => q{echo "hello"},
+        echo => sub { qq{echo "hello $_[0]"} },
     },
     groups => {
         'group_01' => {

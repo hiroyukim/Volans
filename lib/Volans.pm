@@ -23,7 +23,7 @@ sub run_hooks {
     my @hooks =  @{$self->config->{groups}->{$self->{group_name}}->{$hook_name . "_hooks"}||[]};
 
     for my $hook ( @hooks ) {
-        system($self->config->{hooks}->{$hook});
+        system($self->config->{hooks}->{$hook}->($self->{group_name}));
     }
 }
 
