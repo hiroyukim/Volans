@@ -49,7 +49,7 @@ sub run_cmd {
 
     my ($cmd,$hosts) = map {  $self->command->{$_} } qw/cmd hosts/;
 
-    for my $host ( @{$hosts} ) {
+    for my $host ( ( ref $hosts eq 'CODE' ) ? @{$hosts->(@{$self->command_args})} : @{$hosts} ) {
         my ($format,@list) = @{$cmd->($host,@{$self->command_args})};
         system( sprintf($format,@list) );
     }
