@@ -16,7 +16,7 @@ if ($version) {
     print "Volans: $Volans::VERSION\n";
     exit(0);
 }
-pod2usage(2) unless $group;
+pod2usage(2) unless $group_name;
 pod2usage(1) if $help;
 
 &main;exit;
