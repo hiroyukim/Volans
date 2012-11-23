@@ -3,28 +3,43 @@ use strict;
 use warnings;
 our $VERSION = '0.01';
 
+use Carp ();
 use File::Spec;
 
-sub new { 
-    my ($class,%args) = @_;
-    my $self = bless \%args, $class;
+sub new {  
+    my ($class,$command_args,$command,$hooks) = @_;
+
+    unless( ref $command_args eq 'ARRAY' ) {
+        Carp::croak("command_args"); 
+    }
+
+    unless( ref $command eq 'HASH' ) {
+        Carp::croak('command');
+    }
+
+    unless( ref $hooks eq 'HASH' ) {
+        Carp::croak('hooks');
+    }
+
+    bless {
+        command_args   => $command_args,
+        command      => $command,
+        hooks      => $hooks
+    }, $class;
 }
 
-sub config {
-    my $self = shift;    
-
-    $self->{_config} ||= do ( 
-        $self->{config_file_path} ||  File::Spec->catfile($ENV{HOME}, '.volans', 'config.pl') 
-    );
-}
+sub command_args    { $_[0]->{command_args}   }
+sub command       { $_[0]->{command}      }
+sub hooks       { $_[0]->{hooks}      }
 
 sub run_hooks {
     my ($self,$hook_name) = @_;
 
-    my @hooks =  @{$self->config->{groups}->{$self->{group_name}}->{$hook_name . "_hooks"}||[]};
+    my @hooks =  @{$self->command->{$hook_name . "_hooks"}||[]};
 
     for my $hook ( @hooks ) {
-        system($self->config->{hooks}->{$hook}->($self->{group_name}));
+        my ($format,@list) = @{$self->hooks->{$hook}->(@{$self->command_args})};
+        system(sprintf($format,@list));
     }
 }
 
@@ -32,10 +47,11 @@ sub run_hooks {
 sub run_cmd {
     my $self = shift;
 
-    my ($cmd,$hosts) = map {  $self->config->{groups}->{$self->{group_name}}->{$_} } qw/cmd hosts/;
+    my ($cmd,$hosts) = map {  $self->command->{$_} } qw/cmd hosts/;
 
     for my $host ( @{$hosts} ) {
-        system($cmd->($host));
+        my ($format,@list) = @{$cmd->($host,@{$self->command_args})};
+        system( sprintf($format,@list) );
     }
 }
 
