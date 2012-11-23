@@ -32,7 +32,9 @@
          }
       },
       "runtime" : {
-         "requires" : {}
+         "requires" : {
+            "Try::Tiny" : "0"
+         }
       }
    },
    "release_status" : "stable",

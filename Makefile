@@ -15,10 +15,11 @@
 #     BUILD_REQUIRES => { ExtUtils::MakeMaker=>q[6.36] }
 #     CONFIGURE_REQUIRES => {  }
 #     DISTNAME => q[Volans]
+#     EXE_FILES => [q[bin/volans]]
 #     LICENSE => q[perl]
 #     NAME => q[Volans]
 #     NO_META => q[1]
-#     PREREQ_PM => { ExtUtils::MakeMaker=>q[6.36] }
+#     PREREQ_PM => { Try::Tiny=>q[0], ExtUtils::MakeMaker=>q[6.36] }
 #     VERSION => q[0.01]
 #     VERSION_FROM => q[lib/Volans.pm]
 #     dist => { PREOP=>q[$(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"] }
@@ -165,7 +166,7 @@ XS_FILES =
 C_FILES  = 
 O_FILES  = 
 H_FILES  = 
-MAN1PODS = 
+MAN1PODS = bin/volans
 MAN3PODS = lib/Volans.pm
 
 # Where is the Config information that we are using/depend on
@@ -413,7 +414,10 @@ POD2MAN = $(POD2MAN_EXE)
 
 
 manifypods : pure_all  \
+	bin/volans \
 	lib/Volans.pm
+	$(NOECHO) $(POD2MAN) --section=1 --perm_rw=$(PERM_RW) \
+	  bin/volans $(INST_MAN1DIR)/volans.$(MAN1EXT) 
 	$(NOECHO) $(POD2MAN) --section=3 --perm_rw=$(PERM_RW) \
 	  lib/Volans.pm $(INST_MAN3DIR)/Volans.$(MAN3EXT) 
 
@@ -424,6 +428,22 @@ manifypods : pure_all  \
 
 
 # --- MakeMaker installbin section:
+
+EXE_FILES = bin/volans
+
+pure_all :: $(INST_SCRIPT)/volans
+	$(NOECHO) $(NOOP)
+
+realclean ::
+	$(RM_F) \
+	  $(INST_SCRIPT)/volans 
+
+$(INST_SCRIPT)/volans : bin/volans $(FIRST_MAKEFILE) $(INST_SCRIPT)$(DFSEP).exists $(INST_BIN)$(DFSEP).exists
+	$(NOECHO) $(RM_F) $(INST_SCRIPT)/volans
+	$(CP) bin/volans $(INST_SCRIPT)/volans
+	$(FIXIN) $(INST_SCRIPT)/volans
+	-$(NOECHO) $(CHMOD) $(PERM_RWX) $(INST_SCRIPT)/volans
+
 
 
 # --- MakeMaker subdirs section:
@@ -777,6 +797,7 @@ ppd :
 	$(NOECHO) $(ECHO) '    <ABSTRACT></ABSTRACT>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>hiroyuki yamanaka &lt;default {at} example.com&gt;</AUTHOR>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Try::Tiny" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="x86_64-linux-5.16" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> $(DISTNAME).ppd
