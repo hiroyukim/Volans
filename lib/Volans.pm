@@ -13,8 +13,9 @@ sub new {
 sub config {
     my $self = shift;    
 
-    $self->{_config} ||= do 
-        $self->{config_file_path} ||  File::Spec->catfile($ENV{HOME}, '.volans', 'config.pl');
+    $self->{_config} ||= do ( 
+        $self->{config_file_path} ||  File::Spec->catfile($ENV{HOME}, '.volans', 'config.pl') 
+    );
 }
 
 sub run_hooks {
