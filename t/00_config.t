@@ -1,17 +1,18 @@
 use strict;
 use Test::More;
 use Volans;
+use Volans::CLI;
 use File::Spec;
 use File::Basename qw(dirname);
 my $basedir = File::Spec->rel2abs(File::Spec->catdir(dirname(__FILE__)));
 
 subtest 'new' => sub {
-    ok( Volans->new, 'new' );
+    ok( Volans->new([],{},{}), 'new' );
 };
 
 subtest 'config' => sub {
 
-    my $volans = Volans->new(
+    my $volans = Volans::CLI->new(
         config_file_path => "$basedir/config.pl",
     );
 
