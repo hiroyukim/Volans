@@ -27,6 +27,7 @@ sub config {
 sub run {
     my($self, @args) = @_;
 
+    # copy form carton
     local @ARGV = @args;
     my @command_args;
     my $p = Getopt::Long::Parser->new();
