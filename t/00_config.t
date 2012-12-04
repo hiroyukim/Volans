@@ -13,10 +13,27 @@ subtest 'new' => sub {
 subtest 'config' => sub {
 
     my $volans = Volans::CLI->new(
-        config_file_path => "$basedir/config.pl",
+        "$basedir/config.pl",
     );
 
     ok($volans,'new with config_file_path');
+
+    ok($volans->config);
+};
+
+subtest 'bad config' => sub {
+
+    my $volans = Volans::CLI->new(
+        "$basedir/bad_config.pl",
+    );
+
+    ok($volans,'new with config_file_path');
+
+    eval { $volans->config };
+
+    if( $@ ) {
+        ok( 1, "bad config");
+    }
 };
 
 

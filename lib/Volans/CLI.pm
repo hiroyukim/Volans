@@ -19,9 +19,17 @@ sub new {
 sub config {
     my $self = shift;    
 
-    $self->{_config} ||= do (
-        $self->{config_file_path} ||  File::Spec->catfile($ENV{HOME}, '.volans', 'config.pl') 
-    );
+    # FIXME: Config.pm
+    $self->{_config} ||= do { 
+        my $file   = $self->{config_file_path} ||  File::Spec->catfile($ENV{HOME}, '.volans', 'config.pl'); 
+        my $config = do $file;
+
+        if( $@ ) {
+            die "couldn't parse $file $@";
+        };
+
+        $config;
+    };
 }
 
 sub run {

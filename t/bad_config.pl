@@ -1,4 +1,5 @@
 {
+{{{{{{{{
     hooks => {
         echo => sub { 
             [qq{echo "hello %s"},join('',@{$_[0]->{hosts}}),join(' ', @{$_[0]->{command_args}})] 

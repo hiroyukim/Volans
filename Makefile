@@ -20,7 +20,7 @@
 #     NAME => q[Volans]
 #     NO_META => q[1]
 #     PREREQ_PM => { Try::Tiny=>q[0], ExtUtils::MakeMaker=>q[6.36] }
-#     VERSION => q[0.01]
+#     VERSION => q[0.02]
 #     VERSION_FROM => q[lib/Volans.pm]
 #     dist => { PREOP=>q[$(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"] }
 #     realclean => { FILES=>q[MYMETA.yml] }
@@ -63,11 +63,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = Volans
 NAME_SYM = Volans
-VERSION = 0.01
+VERSION = 0.02
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_01
+VERSION_SYM = 0_02
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.01
+XS_VERSION = 0.02
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -189,10 +189,13 @@ PERL_ARCHIVE       =
 PERL_ARCHIVE_AFTER = 
 
 
-TO_INST_PM = lib/Volans.pm
+TO_INST_PM = lib/Volans.pm \
+	lib/Volans/CLI.pm
 
 PM_TO_BLIB = lib/Volans.pm \
-	blib/lib/Volans.pm
+	blib/lib/Volans.pm \
+	lib/Volans/CLI.pm \
+	blib/lib/Volans/CLI.pm
 
 
 # --- MakeMaker platform_constants section:
@@ -261,7 +264,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = Volans
-DISTVNAME = Volans-0.01
+DISTVNAME = Volans-0.02
 
 
 # --- MakeMaker macro section:
@@ -808,7 +811,8 @@ ppd :
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
-	  lib/Volans.pm blib/lib/Volans.pm 
+	  lib/Volans.pm blib/lib/Volans.pm \
+	  lib/Volans/CLI.pm blib/lib/Volans/CLI.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
 

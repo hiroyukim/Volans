@@ -36,9 +36,10 @@ sub run_hooks {
     my ($self,$hook_name) = @_;
 
     my @hooks =  @{$self->command->{$hook_name . "_hooks"}||[]};
+    my $hosts =  $self->command->{hosts};
 
     for my $hook ( @hooks ) {
-        my ($format,@list) = @{$self->hooks->{$hook}->(@{$self->command_args})};
+        my ($format,@list) = @{$self->hooks->{$hook}->({ hosts => ( ref $hosts eq 'CODE' ) ? $hosts->(@{$self->command_args}) : $hosts, command_args => $self->command_args })};
         system(sprintf($format,@list));
     }
 }
